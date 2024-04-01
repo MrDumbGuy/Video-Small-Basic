@@ -1,0 +1,57 @@
+video = File.ReadContents(Program.Directory + "\data.txt") 'all the frames are stored in here in 96x72 format
+
+'specify the format for the decoder
+fx=96
+fy=72
+fc=6722
+
+'read all the frames individually. fx*fy is the text length of one frame, i-1 is used instead of i so we start from the first character
+For i = 1 To fc
+  frame[i] = Text.GetSubText(video, fx*fy*(i-1), fx*fy)
+  TextWindow.WriteLine(i + " frames complete")
+EndFor
+
+'self-explanotory
+GraphicsWindow.Width = fx
+GraphicsWindow.Height = fy
+GraphicsWindow.Title = "Bad Apple!!"
+
+For n = 1 To fc 'for all frames
+  For y = 1 To fy 'in all vertical lines of this frame
+    For x = 1 To fx 'in all horizontal lines of this frame
+      p = Text.GetSubText(frame[n], fx*(y-1)+x, 1) 'get individual pixel within frame
+      If p<>Text.GetSubText(frame[n-1], fx*(y-1)+x, 1) Then 'runs only if the previous frame had a different colored pixel. MASSIVE time saver.
+        If p = 0 Then 'convert pixel data from symbol to color information
+          col = "Black"
+        ElseIf p = 1 Then
+          col = "White"
+        ElseIf p = "r" Then
+          col = "Red"
+        ElseIf p = "R" Then
+          col = "DarkRed"
+        ElseIf p = "y" Then
+          col = "Yellow"
+        ElseIf p = "Y" Then
+          col = "DarkYellow"
+        ElseIf p = "g" Then
+          col = "Green"
+        ElseIf p = "G" Then
+          col = "DarkGreen"
+        ElseIf p = "b" Then
+          col = "Blue"
+        ElseIf p = "B" Then
+          col = "DarkBlue"
+        ElseIf p = "c" then
+          col = "Cyan"
+        ElseIf p = "C" Then
+          col = "DarkCyan"
+        ElseIf p = "m" Then
+          col = "Magenta"
+        ElseIf p = "M" Then
+          col = "DarkMagenta"
+        EndIf
+        GraphicsWindow.SetPixel(x-1, y-1, col)
+      EndIf
+    EndFor
+  EndFor
+EndFor
