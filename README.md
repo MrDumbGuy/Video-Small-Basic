@@ -27,7 +27,7 @@ Made as an April Fools' joke, the worst video encoder and decoder of all time! D
   * matplotlib 3.8+
 
 ### Video preperation for video encoder:
-Use FFMPEG to resize the video to 96x72 and apply the palette "palette.png" provided in the source
+Use FFMPEG to resize the video to 96x72 format with 30 FPS and apply the palette "palette.png" provided in the source
 
 ### Usage
 
