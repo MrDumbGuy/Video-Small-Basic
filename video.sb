@@ -1,30 +1,37 @@
-video = File.ReadContents(Program.Directory + "\data.txt") 'all the frames are stored in here in 96x72 format
+apple = File.ReadContents(Program.Directory + "\data.txt") 'all the frames are stored in here in 96x72 format for the demo
 
 'specify the format for the decoder
 fx=96
 fy=72
-fc=6722
+fc=6540 'number of frames
 
-'read all the frames individually. fx*fy is the text length of one frame, i-1 is used instead of i so we start from the first character
+'read all the frames individually. fx*fy makes it so that the area of the frame is the length of the substring.
 For i = 1 To fc
-  frame[i] = Text.GetSubText(video, fx*fy*(i-1), fx*fy)
-  TextWindow.WriteLine(i + " frames complete")
+  frame[i] = Text.GetSubText(apple, fx*fy*(i-1), fx*fy)
+  'TextWindow.WriteLine(i + " frames complete")
 EndFor
 
 'self-explanotory
 GraphicsWindow.Width = fx
 GraphicsWindow.Height = fy
-GraphicsWindow.Title = "Bad Apple!!"
 
-For n = 1 To fc 'for all frames
+adjnext = 0
+
+Sound.Play(Program.Directory + "\badple.mp3")'switch with your audio!
+For n = 1 To (fc/4) 'every 4 frames (for speed's sake)
+  t1 = Clock.ElapsedMilliseconds
   For y = 1 To fy 'in all vertical lines of this frame
     For x = 1 To fx 'in all horizontal lines of this frame
-      p = Text.GetSubText(frame[n], fx*(y-1)+x, 1) 'get individual pixel within frame
-      If p<>Text.GetSubText(frame[n-1], fx*(y-1)+x, 1) Then 'runs only if the previous frame had a different colored pixel. MASSIVE time saver.
+      p = Text.GetSubText(frame[n*4], fx*(y-1)+x, 1) 'get individual pixel within frame
+      If p<>Text.GetSubText(frame[n*4-4], fx*(y-1)+x, 1) Then
         If p = 0 Then 'convert pixel data from symbol to color information
           col = "Black"
         ElseIf p = 1 Then
           col = "White"
+        ElseIf p = 2 Then
+          col = "Gray"
+        ElseIf p = 3 Then
+          col = "DarkGray"
         ElseIf p = "r" Then
           col = "Red"
         ElseIf p = "R" Then
@@ -49,9 +56,36 @@ For n = 1 To fc 'for all frames
           col = "Magenta"
         ElseIf p = "M" Then
           col = "DarkMagenta"
+          'Non standard colors start here. Make sure to use RGB here but BGR in the python array!
+        ElseIf p = "o" Then                                 '[o]range and dark[O]range
+          col = GraphicsWindow.GetColorFromRGB(255, 165, 0)
+        ElseIf p = "O" Then
+          col = GraphicsWindow.GetColorFromRGB(255, 140, 0)
+        ElseIf p = "w" Then                                 'bro[w]n and darkBro[w]n.
+          col = GraphicsWindow.GetColorFromRGB(160, 82, 45)
+        ElseIf p = "W" Then
+          col = GraphicsWindow.GetColorFromRGB(139, 69, 19)
+        ElseIf p = 4 Then 'lightslategray
+          col = GraphicsWindow.GetColorFromRGB(119, 136, 153)
+        ElseIf p = 5 then 'darkslategray
+          col = GraphicsWindow.GetColorFromRGB(47, 79, 79)
         EndIf
         GraphicsWindow.SetPixel(x-1, y-1, col)
       EndIf
     EndFor
   EndFor
+  elapsedTime = Clock.ElapsedMilliseconds - t1
+  
+  adjustment = 400/3 - elapsedTime - adjnext
+  
+  If adjustment > 0 Then
+    Program.Delay(adjustment)
+    If adjnext = 0 Then
+    Else
+      adjnext = 0
+    EndIf
+  Else
+    adjnext = Math.Abs(adjustment)
+  EndIf
+  'TextWindow.WriteLine(Clock.ElapsedMilliseconds - t1)
 EndFor
