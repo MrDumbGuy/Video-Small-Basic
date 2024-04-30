@@ -13,7 +13,7 @@ Made as an April Fools' joke, the worst video encoder and decoder of all time! D
 ### Compilation:
 
 1. Open Microsoft Small Basic, and open the "video.sb" file from within.
-2. Change the variable 'apple' such that it points to your desired text file.
+2. Change the variable 'apple' such that it points to your desired text file. (Program.Directory returns the executable's folder)
 3. Change fc to reflect the number of frames in your video.
 4. In line 29, change the audio file to your desired audio.
 5. Running the script with F5 will compile the program.
