@@ -1,4 +1,4 @@
-apple = File.ReadContents(Program.Directory + "\data.txt") 'all the frames are stored in here in 96x72 format for the demo
+apple = File.ReadContents(Program.Directory + "\apple.txt") 'all the frames are stored in here in 96x72 format
 
 'specify the format for the decoder
 fx=96
@@ -17,66 +17,30 @@ GraphicsWindow.Height = fy
 
 adjnext = 0
 
-Sound.Play(Program.Directory + "\badple.mp3")'switch with your audio!
-For n = 1 To (fc/4) 'every 4 frames (for speed's sake)
+cols[0]=GraphicsWindow.GetColorFromRGB(0, 0, 0)
+cols[1]=GraphicsWindow.GetColorFromRGB(26, 26, 26)
+cols[2]=GraphicsWindow.GetColorFromRGB(51, 51, 51)
+cols[3]=GraphicsWindow.GetColorFromRGB(77, 77, 77)
+cols[4]=GraphicsWindow.GetColorFromRGB(102, 102, 102)
+cols[5]=GraphicsWindow.GetColorFromRGB(128, 128, 128)
+cols[6]=GraphicsWindow.GetColorFromRGB(153, 153, 153)
+cols[7]=GraphicsWindow.GetColorFromRGB(255, 255, 255)
+
+Sound.Play(Program.Directory + "\apple.mp3")'to disable sound, just delete the file. smallbasic handles attempting to open non-existent files.
+For n = 1 To (fc/3) 'every 3 frames (for speed's sake)
   t1 = Clock.ElapsedMilliseconds
   For y = 1 To fy 'in all vertical lines of this frame
     For x = 1 To fx 'in all horizontal lines of this frame
-      p = Text.GetSubText(frame[n*4], fx*(y-1)+x, 1) 'get individual pixel within frame
-      If p<>Text.GetSubText(frame[n*4-4], fx*(y-1)+x, 1) Then
-        If p = 0 Then 'convert pixel data from symbol to color information
-          col = "Black"
-        ElseIf p = 1 Then
-          col = "White"
-        ElseIf p = 2 Then
-          col = "Gray"
-        ElseIf p = 3 Then
-          col = "DarkGray"
-        ElseIf p = "r" Then
-          col = "Red"
-        ElseIf p = "R" Then
-          col = "DarkRed"
-        ElseIf p = "y" Then
-          col = "Yellow"
-        ElseIf p = "Y" Then
-          col = "DarkYellow"
-        ElseIf p = "g" Then
-          col = "Green"
-        ElseIf p = "G" Then
-          col = "DarkGreen"
-        ElseIf p = "b" Then
-          col = "Blue"
-        ElseIf p = "B" Then
-          col = "DarkBlue"
-        ElseIf p = "c" then
-          col = "Cyan"
-        ElseIf p = "C" Then
-          col = "DarkCyan"
-        ElseIf p = "m" Then
-          col = "Magenta"
-        ElseIf p = "M" Then
-          col = "DarkMagenta"
-          'Non standard colors start here. Make sure to use RGB here but BGR in the python array!
-        ElseIf p = "o" Then                                 '[o]range and dark[O]range
-          col = GraphicsWindow.GetColorFromRGB(255, 165, 0)
-        ElseIf p = "O" Then
-          col = GraphicsWindow.GetColorFromRGB(255, 140, 0)
-        ElseIf p = "w" Then                                 'bro[w]n and darkBro[w]n.
-          col = GraphicsWindow.GetColorFromRGB(160, 82, 45)
-        ElseIf p = "W" Then
-          col = GraphicsWindow.GetColorFromRGB(139, 69, 19)
-        ElseIf p = 4 Then 'lightslategray
-          col = GraphicsWindow.GetColorFromRGB(119, 136, 153)
-        ElseIf p = 5 then 'darkslategray
-          col = GraphicsWindow.GetColorFromRGB(47, 79, 79)
-        EndIf
+      p = Text.GetSubText(frame[n*3], fx*(y-1)+x, 1) 'get individual pixel within frame
+      If p<>Text.GetSubText(frame[n*3-3], fx*(y-1)+x, 1) Then
+        col = cols[p]
         GraphicsWindow.SetPixel(x-1, y-1, col)
       EndIf
     EndFor
   EndFor
   elapsedTime = Clock.ElapsedMilliseconds - t1
   
-  adjustment = 400/3 - elapsedTime - adjnext
+  adjustment = 99.99 - elapsedTime - adjnext
   
   If adjustment > 0 Then
     Program.Delay(adjustment)
