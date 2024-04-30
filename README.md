@@ -2,7 +2,7 @@
 Made as an April Fools' joke, the worst video encoder and decoder of all time! Definitely not the best that I could do.
 
 ## Features:
-1. 22-Color playback!
+1. Grayscale playback with 8 total "colors"!
 2. Colorbleed on the leftmost part of the video!
 
 ## Compilation instructions for the video decoder:
@@ -15,14 +15,13 @@ Made as an April Fools' joke, the worst video encoder and decoder of all time! D
 1. Open Microsoft Small Basic, and open the "video.sb" file from within.
 2. Change the variable 'apple' such that it points to your desired text file.
 3. Change fc to reflect the number of frames in your video.
-4. In line 20, change the audio file to your desired audio.
+4. In line 29, change the audio file to your desired audio.
 5. Running the script with F5 will compile the program.
 
 ## Usage instructions for video encoder
 
 ### Requirements (Minimum tested):
 * Python 3.12+
-  * numpy 1.26+
   * opencv-python 4.9+
   * matplotlib 3.8+
 
@@ -31,11 +30,10 @@ Use FFMPEG to resize the video to 96x72 format with 30 FPS and apply the palette
 
 ### Usage
 
-1. Edit 'videoToRaw.py' and edit the video path in line 53 to point to your desired video.
+1. Edit 'videoToRaw.py' and edit the video path in line 37 to point to your desired video.
 2. Run the file
-3. If you are using a laptop, please plug it in. Otherwise, even 3 minutes of video will take days to encode. Not may, will.
+3. If compilation is taking long on a laptop, try plugging it in. This shouldn't be a problem anymore.
 4. The encoded text will appear as 'datacol.txt' in the same directory.
-- Running the script may take extremely long on lower-end machines.
 
 ## Usage of video decoder
 
