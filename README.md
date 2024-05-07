@@ -8,6 +8,7 @@ Made as an April Fools' joke, the worst video encoder and decoder of all time! D
 ## Compilation instructions for the video decoder:
 
 ### Requirements:
+* Windows Vista+ 64-bit
 * Microsoft Small Basic 1.2
   
 ### Compilation:
