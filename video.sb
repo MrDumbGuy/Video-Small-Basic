@@ -1,55 +1,53 @@
-apple = File.ReadContents(Program.Directory + "\apple.txt") 'all the frames are stored in here in 96x72 format
+apple = File.ReadContents(Program.Directory + "\apple.txt") 'Make sure the frames are in 96x72 at 30FPS, otherwise, modify the code to suit your needs.
 
-'specify the format for the decoder
-fx=96
-fy=72
-fc=6540 'number of frames
+'Specify the format for the decoder
+fx=96 'Frame width
+fy=72 'Frame height
+fc=math.Ceiling(Text.GetLength(apple)/(fx*fy)) 'Number of frames. Calculated automatically now.
 
-'read all the frames individually. fx*fy makes it so that the area of the frame is the length of the substring.
-For i = 1 To fc
-  frame[i] = Text.GetSubText(apple, fx*fy*(i-1), fx*fy)
-  'TextWindow.WriteLine(i + " frames complete")
+qLoss = 3 '(Quality loss) -> Output FPS = 30/qLoss. Input FPS is still assumed to be 30!
+targetDelay = 1000*qLoss/30 'Convert the Output FPS into delay in milliseconds.
+
+'Read all the frames which will be rendered.
+For i = 1 To fc Step qLoss
+  frame[i+(qLoss-1)] = Text.GetSubText(apple, fx*fy*(i-1), fx*fy)'Trust the process.
 EndFor
 
-'self-explanotory
-GraphicsWindow.Width = fx
-GraphicsWindow.Height = fy
+'Set window size for playback.
+GraphicsWindow.Width = fx*2
+GraphicsWindow.Height = fy*2
 
+'The default of White was just too bright. So, I chose this slightly darker white.
+GraphicsWindow.BackgroundColor = GraphicsWindow.GetColorFromRGB(195,195, 195)
+
+'Defining the adjnext variable here so that errors are avoided on the first frame
 adjnext = 0
 
-cols[0]=GraphicsWindow.GetColorFromRGB(0, 0, 0)
-cols[1]=GraphicsWindow.GetColorFromRGB(26, 26, 26)
-cols[2]=GraphicsWindow.GetColorFromRGB(51, 51, 51)
-cols[3]=GraphicsWindow.GetColorFromRGB(77, 77, 77)
-cols[4]=GraphicsWindow.GetColorFromRGB(102, 102, 102)
-cols[5]=GraphicsWindow.GetColorFromRGB(128, 128, 128)
-cols[6]=GraphicsWindow.GetColorFromRGB(153, 153, 153)
-cols[7]=GraphicsWindow.GetColorFromRGB(255, 255, 255)
+For i = 1 To 8 'Recreate the colors used to detect brightness in the Python script. Compatible with 1.0.0 colors (as in no fatal errors, the colors might be off sometimes)
+  cols[i-1] = GraphicsWindow.GetColorFromRGB((32*i)-1, (32*i)-1, (32*i)-1)
+EndFor
 
-Sound.Play(Program.Directory + "\apple.mp3")'to disable sound, just delete the file. smallbasic handles attempting to open non-existent files.
-For n = 1 To (fc/3) 'every 3 frames (for speed's sake)
+Sound.Play(Program.Directory + "\apple.mp3")
+For n = 1 To Math.Ceiling(fc/qloss) '1 to number of frames (to be rendered) in the video
   t1 = Clock.ElapsedMilliseconds
   For y = 1 To fy 'in all vertical lines of this frame
     For x = 1 To fx 'in all horizontal lines of this frame
-      p = Text.GetSubText(frame[n*3], fx*(y-1)+x, 1) 'get individual pixel within frame
-      If p<>Text.GetSubText(frame[n*3-3], fx*(y-1)+x, 1) Then
-        col = cols[p]
-        GraphicsWindow.SetPixel(x-1, y-1, col)
+      p = Text.GetSubText(frame[n*qLoss], fx*(y-1)+x, 1) 'get individual pixel within frame
+      If p<>Text.GetSubText(frame[n*qLoss-qLoss], fx*(y-1)+x, 1) Then 'If not the same color as the pixel in the same position in the previous frame
+          col = cols[p] 'Load pre-defined color
+          GraphicsWindow.SetPixel(2*(x-1), 2*(y-1), col)'Set pixel as predefined color
       EndIf
     EndFor
   EndFor
+  'I have no clue how I made this work, but the following code speeds the video back up to where it's supposed to be if rendering some frames took too long.
   elapsedTime = Clock.ElapsedMilliseconds - t1
   
-  adjustment = 99.99 - elapsedTime - adjnext
+  adjustment = targetDelay - elapsedTime - adjnext
   
   If adjustment > 0 Then
     Program.Delay(adjustment)
-    If adjnext = 0 Then
-    Else
-      adjnext = 0
-    EndIf
+    adjnext = 0
   Else
     adjnext = Math.Abs(adjustment)
   EndIf
-  'TextWindow.WriteLine(Clock.ElapsedMilliseconds - t1)
 EndFor
