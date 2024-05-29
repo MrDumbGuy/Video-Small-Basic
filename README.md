@@ -1,41 +1,44 @@
-# Video-Small-Basic: Programmers Beware!
-Made as an April Fools' joke, the worst video encoder and decoder of all time! Definitely not the best that I could do.
+# Video-Small-Basic
+**"Once a joke, now very serious"**
 
-## Features:
-1. Grayscale playback with 8 total "colors"!
-2. Colorbleed on the leftmost part of the video!
+# General Instructions:
 
-## Compilation instructions for the video decoder:
+## Requirements for Compilation and Video Preperation (minimum tested):
+1. Small Basic v1.2 (Only necessary for compilation)
+2. Python v 3.12 (Only necessary for video preperation)
+     - Matplotlib v3.8.4
+     -opencv-python v4.9.0.80
+3. Any program which can resize and extract audio from videos (required for video preperation only)
 
-### Requirements:
-* Windows Vista+ 64-bit
-* Microsoft Small Basic 1.2
-  
-### Compilation:
+## Video preparation:
 
-1. Open Microsoft Small Basic, and open the "video.sb" file from within.
-2. Change the variable 'apple' such that it points to your desired text file. (Program.Directory returns the executable's folder)
-3. Change fc to reflect the number of frames in your video.
-4. In line 29, change the audio file to your desired audio.
-5. Running the script with F5 will compile the program.
+### Conversion to supported format
+*  Resize the video to a very small size (preferable no more than 100x75) and change the framerate to 30FPS
+*  You can use tools like FFMPEG for this
+*  Edit the python script and assign your target video file to the variable "cap" in line 37
+*  Run the script and rename "output.txt" to "(name).txt"
+*  Extract the audio from your video as an mp3 file and name it "(name).mp3"
 
-## Usage instructions for video encoder
+### Placing the video in the right place
+*  Place the generated txt and mp3 files in "\path\to\executable\vids\"
 
-### Requirements (Minimum tested):
-* Python 3.12+
-  * opencv-python 4.9+
-  * matplotlib 3.8+
+## Running the video:
 
-### Video preperation for video encoder:
-Use FFMPEG to resize the video to 96x72 format with 30 FPS.
+### Arguments and their correct order
+1. vname: Should be the (name) you used from earlier
+2. qloss: When the video plays, the output is at 30/qloss FPS
+3. fx: width of your video
+4. fy: height of your video
+If you did everything right, the video should play just fine
 
-### Usage
+## Compilation of video decoder
+1. Open the video.sb file in small basic
+2. Run it with F5
+3. Your new code has been compiled
+4. If there was an executable witht he same name in the same directory (e.g. video.sb and video.exe), video.exe now runs the updated code.
 
-1. Edit 'videoToRaw.py' and edit the video path in line 37 to point to your desired video.
-2. Run the file
-3. If compilation is taking long on a laptop, try plugging it in. This shouldn't be a problem anymore.
-4. The encoded text will appear as 'datacol.txt' in the same directory.
-
-## Usage of video decoder
-
-1. Just run the executable. If you compiled it and edited the code properly, you should see the video start to play with sound!
+## User-end fixes for known issues
+1.  Some videos are simply too graphically intensive to be played.
+     - These include videos with flashing light and lots of background details.
+     - You may use higher qloss values to load them.
+2.   I do not know any other issues. If you know any, please let me know :)
