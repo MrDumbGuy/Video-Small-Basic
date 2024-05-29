@@ -7,7 +7,7 @@
 1. Small Basic v1.2 (Only necessary for compilation)
 2. Python v 3.12 (Only necessary for video preperation)
      - Matplotlib v3.8.4
-     -opencv-python v4.9.0.80
+     - opencv-python v4.9.0.80
 3. Any program which can resize and extract audio from videos (required for video preperation only)
 
 ## Video preparation:
