@@ -29,6 +29,8 @@
 2. qloss: When the video plays, the output is at 30/qloss FPS
 3. fx: width of your video
 4. fy: height of your video
+5. Correct syntax: `video.exe vname qloss fx fy`
+For example `video.exe apple 4 96 72` loads apple.txt and apple.mp3, plays output at 30/4 FPS and interprets the text file as 96x72
 If you did everything right, the video should play just fine
 
 ## Compilation of video decoder
