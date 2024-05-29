@@ -2,7 +2,7 @@ import cv2
 import matplotlib.colors
 import matplotlib
 
-f = open("test.txt", 'a')
+f = open("output.txt", 'a')
 
 colors = {
     '0': (0, 0, 0),

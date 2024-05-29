@@ -1,19 +1,42 @@
-apple = File.ReadContents(Program.Directory + "\apple.txt") 'Make sure the frames are in 96x72 at 30FPS, otherwise, modify the code to suit your needs.
+'Default values for arguments . Useful for testing after compiling. Loads the Bad Apple!! video at 7.5FPS
+fx = 96 'width of video
+fy = 72 'height of video
+apple = File.ReadContents(Program.Directory + "\vids\apple.txt") 'txt file with. the reason the variable is named apple is because this used to only play the bad apple video. 
+applemus = Program.Directory + "\vids\apple.mp3" 'and this one is named applemus so that the name is similar to apple
+qLoss = 4 'magnitude of [q]uality [loss]
 
-'Specify the format for the decoder
-fx=96 'Frame width
-fy=72 'Frame height
-fc=math.Ceiling(Text.GetLength(apple)/(fx*fy)) 'Number of frames. Calculated automatically now.
+If Program.ArgumentCount >= 1 Then
+  If Program.GetArgument(1) = "help" Then 'The new terminal creates a seperate window. Old command prompt displays as a regular message though.
+    TextWindow.WriteLine("Syntax: video.exe vname qloss fx fy")
+    TextWindow.WriteLine("For example, video.exe apple 4 96 72")
+    TextWindow.WriteLine("Will load /vids/apple.txt, /vids/apple.mp3, play at 30/4FPS and interpret as a 96x72 video.")
+    TextWindow.WriteLine("Press [ENTER] to kill program.")
+    TextWindow.PauseWithoutMessage()
+    Program.End()
+  EndIf
+  apple = File.ReadContents(Program.Directory + "\vids\" + Program.GetArgument(1) + ".txt")
+  applemus = Program.Directory + "\vids\" + Program.GetArgument(1) + ".mp3"
+  If Program.GetArgument(2) <> "" Then
+    qLoss = Program.GetArgument(2)
+  EndIf
+  If Program.GetArgument(3) <> "" Then
+    fx = Program.GetArgument(3)
+  EndIf
+  If Program.GetArgument(4) <> "" Then
+    fy = Program.GetArgument(4)
+  EndIf
+EndIf
 
-qLoss = 3 '(Quality loss) -> Output FPS = 30/qLoss. Input FPS is still assumed to be 30!
+fc=Text.GetLength(apple)/(fx*fy) 'Number of frames. Calculated automatically now.
 targetDelay = 1000*qLoss/30 'Convert the Output FPS into delay in milliseconds.
 
 'Read all the frames which will be rendered.
-For i = 1 To fc Step qLoss
-  frame[i+(qLoss-1)] = Text.GetSubText(apple, fx*fy*(i-1), fx*fy)'Trust the process.
+For i = 1 To fc
+  frame[i+(qLoss-1)] = Text.GetSubText(apple, fx*fy*(i-1), fx*fy) 'Trust the process.
 EndFor
 
 'Set window size for playback.
+GraphicsWindow.Title = Program.GetArgument(1)
 GraphicsWindow.Width = fx*2
 GraphicsWindow.Height = fy*2
 
@@ -23,26 +46,25 @@ GraphicsWindow.BackgroundColor = GraphicsWindow.GetColorFromRGB(195,195, 195)
 'Defining the adjnext variable here so that errors are avoided on the first frame
 adjnext = 0
 
-For i = 1 To 8 'Recreate the colors used to detect brightness in the Python script. Compatible with 1.0.0 colors (as in no fatal errors, the colors might be off sometimes)
+For i = 1 To 8 'Recreate the colors used to detect brightness in the Python script. Compatible with as far back as 1.0.0 colors (as in no fatal errors, the colors might be off sometimes)
   cols[i-1] = GraphicsWindow.GetColorFromRGB((32*i)-1, (32*i)-1, (32*i)-1)
 EndFor
 
-Sound.Play(Program.Directory + "\apple.mp3")
-For n = 1 To Math.Ceiling(fc/qloss) '1 to number of frames (to be rendered) in the video
+Sound.Play(applemus)
+For n = 1 To Math.Ceiling(fc/qLoss) '1 to number of frames (to be rendered) in the video
   t1 = Clock.ElapsedMilliseconds
   For y = 1 To fy 'in all vertical lines of this frame
     For x = 1 To fx 'in all horizontal lines of this frame
       p = Text.GetSubText(frame[n*qLoss], fx*(y-1)+x, 1) 'get individual pixel within frame
-      If p<>Text.GetSubText(frame[n*qLoss-qLoss], fx*(y-1)+x, 1) Then 'If not the same color as the pixel in the same position in the previous frame
-          col = cols[p] 'Load pre-defined color
-          GraphicsWindow.SetPixel(2*(x-1), 2*(y-1), col)'Set pixel as predefined color
+      If p <> Text.GetSubText(frame[n*qLoss-qLoss], fx*(y-1)+x, 1) Then 'If not the same color as the pixel in the same position in the previous frame
+          GraphicsWindow.SetPixel(2*(x-1), 2*(y-1), cols[p]) 'Set pixel as target color
       EndIf
     EndFor
   EndFor
   'I have no clue how I made this work, but the following code speeds the video back up to where it's supposed to be if rendering some frames took too long.
   elapsedTime = Clock.ElapsedMilliseconds - t1
   
-  adjustment = targetDelay - elapsedTime - adjnext
+  adjustment = targetDelay - elapsedTime - adjnext - 1 '-1 accounts for the time taken up by calculating the delay.
   
   If adjustment > 0 Then
     Program.Delay(adjustment)
