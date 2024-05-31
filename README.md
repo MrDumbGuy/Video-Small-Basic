@@ -13,7 +13,7 @@
 ## Video preparation:
 
 ### Conversion to supported format
-*  Resize the video to a very small size (preferable no more than 100x75) and change the framerate to 30FPS
+*  Resize the video to a very small size (preferably no more than 100x75) and change the framerate to 30FPS
 *  You can use tools like FFMPEG for this
 *  Edit the python script and assign your target video file to the variable "cap" in line 37
 *  Run the script and rename "output.txt" to "(name).txt"
