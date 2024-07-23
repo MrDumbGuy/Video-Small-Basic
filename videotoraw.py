@@ -5,33 +5,33 @@ import matplotlib
 f = open("output.txt", 'a')
 
 colors = {
-    '0': (0, 0, 0),
-    '1': (31, 31, 31),
-    '2': (63, 63, 63),
-    '3': (95, 95, 95),
-    '4': (127, 127, 127),
-    '5': (159, 159, 159),
-    '6': (191, 191, 191),
-    '7': (255, 255, 255),
+    '0': 0,
+    '1': 32,
+    '2': 64,
+    '3': 96,
+    '4': 128,
+    '5': 160,
+    '6': 192,
+    '7': 234,
+    '8': 255,
 }
     
 for c in colors:
-    colors[c] = sum(colors[c])/len(colors[c])
     print(colors[c])
 
 def get_color_name(pixel):
     pixel = sum(pixel)/len(pixel)
     min_dist = float('inf')
-    color_name = None
+    final_color_name = None
     
     for color, value in colors.items():
         dist = abs(value - pixel)
         
         if dist < min_dist:
             min_dist = dist
-            color_name = color
+            final_color_name = color
 
-    return color_name
+    return final_color_name
 
 
 cap = cv2.VideoCapture('input.mp4') #Replace this with your own video!
