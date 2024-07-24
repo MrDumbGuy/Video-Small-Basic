@@ -48,5 +48,5 @@ For example: `video.exe apple 30 4` loads apple.txt and apple.mp3, and plays out
 ## User-end fixes for known issues
 1.  Some videos are simply too graphically intensive to be played.
      - These include videos with flashing light and lots of background details.
-     - You may use higher qloss values to load them.
+     - You may use higher frameRatio values to load them.
 2.   I do not know any other issues. If you know any, please let me know :)
