@@ -1,14 +1,6 @@
 # Video-Small-Basic
 **"Once a joke, now very serious"**
 
-# Attention users of Windows 11 23H2
-As I had been putting the update off myself, I only recently learned about the fall of performance. To increase your performance (and get the program running), follow these steps:
-1. Open PowerShell as admin and run the two following scripts
-  - `Set-ExecutionPolicy Unrestricted`
-  - `Get-AppxPackage Microsoft.SecHealthUI -AllUsers | Reset-AppxPackage`
-2. Enable hardware virtualisation (usually done in UEFI or BIOS)
-3. Disable memory integrity (you may be unable to turn it back on depending on your drivers)
-
 # General Instructions:
 
 ## Requirements for Compilation and Video Preperation (minimum tested):
